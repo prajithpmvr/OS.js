@@ -31,6 +31,7 @@ const PackageManager = require('./../packagemanager.js');
 const Modules = require('./../modules.js');
 const Settings = require('./../settings.js');
 const User = require('./../user.js');
+const VFS = require('../vfs.js');
 
 module.exports = function(app, wrapper) {
   const authenticator = () => Modules.getAuthenticator();
@@ -54,11 +55,17 @@ module.exports = function(app, wrapper) {
             http.setActiveUser(http.request, true);
 
             return http.request.session.save(() => {
-              http.response.json({result: {
-                userData: user.toJson(),
-                userSettings: settings,
-                blacklistedPackages: blacklist
-              }});
+              const done = (e) => {
+                http.response.json({result: {
+                  userData: user.toJson(),
+                  userSettings: settings,
+                  blacklistedPackages: blacklist
+                }});
+              };
+
+              VFS.request(user, 'mkdir', {
+                path: 'home:///.desktop'
+              }).then(done).catch(done);
             });
           }).catch(errored);
         }).catch(errored);
