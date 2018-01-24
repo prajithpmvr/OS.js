@@ -686,14 +686,16 @@ export default class Window {
     }, true);
 
     Events.$bind(this._$top, 'mouseup', (ev) => {
-      const t = ev.target;
-      if ( t ) {
-        if ( t.tagName.match(/^APPLICATION\-WINDOW\-BUTTON/) ) {
-          this._onWindowButtonClick(ev, t, t.getAttribute('data-action'));
-        } else if ( t.tagName === 'APPLICATION-WINDOW-ICON' ) {
-          this._onWindowIconClick(ev);
+      setTimeout(() => {
+        const t = ev.target;
+        if ( t ) {
+          if ( t.tagName.match(/^APPLICATION\-WINDOW\-BUTTON/) ) {
+            this._onWindowButtonClick(ev, t, t.getAttribute('data-action'));
+          } else if ( t.tagName === 'APPLICATION-WINDOW-ICON' ) {
+            this._onWindowIconClick(ev);
+          }
         }
-      }
+      }, 0);
     });
 
     Events.$bind(this._$top, 'dblclick', () => {
