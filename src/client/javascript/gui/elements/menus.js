@@ -214,7 +214,9 @@ class GUIMenu extends GUIElement {
 
     // This is to use a menu-bar > menu as a contextmenu
     const newNode = this.$element.cloneNode(true);
-    Menu.create(null, ev, newNode);
+    Menu.create(null, ev, newNode, (ev, pos, t, orig) => {
+      onEntryClick(ev, pos, t, this.$element);
+    });
   }
 
   set(param, value, arg) {

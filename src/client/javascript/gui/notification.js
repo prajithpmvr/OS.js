@@ -96,6 +96,7 @@ class Notification {
       const anim = WindowManager.instance.getSetting('animations');
       if ( anim ) {
         container.setAttribute('data-hint', 'closing');
+        container.setAttribute('data-closing', 'true');
         animationCallback = () => _removeDOM();
       } else {
         container.style.display = 'none';

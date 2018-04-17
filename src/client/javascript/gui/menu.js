@@ -132,9 +132,11 @@ export function blur(ev) {
  * @param   {Array}                items             Array of items
  * @param   {(Event|Object)}       ev                DOM Event or dict with x/y
  * @param   {Object}               [customInstance]  Show a custom created menu
+ * @param   {Function}             [onClick]         Global menu onClick handler
  */
-export function create(items, ev, customInstance) {
+export function create(items, ev, customInstance, onClick) {
   items = items || [];
+  onClick = onClick || function() {};
 
   blur(ev);
 
@@ -171,20 +173,24 @@ export function create(items, ev, customInstance) {
         }, 1);
       }
     }, true);
+  }
 
-    Events.$bind(root, 'click', function(ev, pos) {
-      clickWrapper(ev, pos, function(ev, pos, t, orig, isExpander) {
+  Events.$bind(root, 'click', function(ev, pos) {
+    clickWrapper(ev, pos, function(ev, pos, t, orig, isExpander) {
+      if ( customInstance ) {
+        onClick(ev, pos, t, orig);
+      } else {
         const index = parseInt(t.getAttribute('data-callback-id'), 10);
         if ( callbackMap[index] ) {
           callbackMap[index](ev, pos);
         }
+      }
 
-        if ( !isExpander ) {
-          blur(ev);
-        }
-      });
-    }, true);
-  }
+      if ( !isExpander ) {
+        blur(ev);
+      }
+    });
+  }, true);
 
   if ( root.$element ) {
     root = root.$element;
